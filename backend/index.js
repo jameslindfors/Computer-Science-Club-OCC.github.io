@@ -1,3 +1,4 @@
+require("dotenv/config")
 const express = require("express")
 const app = express()
 const mongoose = require("mongoose")
@@ -7,7 +8,7 @@ const path = require("path")
 const checkMongoStatus = require("./utils/check-mongo-status")
 const PORT = process.env.PORT || 8000
 const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost/occ-csc"
-require("dotenv/config")
+// require("dotenv/config")
 
 // Connect datbase and create collection
 mongoose

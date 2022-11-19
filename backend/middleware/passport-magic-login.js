@@ -1,27 +1,22 @@
 const MagicLoginStrategy = require("passport-magic-login")
+const { sendEmail } = require("../services/mail/index")
+const { mailConfig } = require("../services/mail/index")
 
 const magicLogin = new MagicLoginStrategy({
     secret: process.env.MAGIC_LINK_SECRET,
-    callbackUrl: "/auth/login/callback",
-
-    // Remove comment once sendEmail and getUser functions are implemented
-    // sendMagicLink: async (destination, href) => {
-    //     await sendEmail({
-    //         to: destination,
-    //         body: `Click this link to finish logging in: ${href}`,
-    //     })
-    // },
-    // verify: (payload, callback) => {
-    //     getUserWithEmail(payload.destination)
-    //         .then((user) => {
-    //             callback(null, user)
-    //         })
-    //         .catch((err) => {
-    //             callback(err)
-    //         })
-    // },
-    jwtOptions: {
-        expiresIn: "15 minutes",
+    callbackUrl: "/auth/magiclogin/callback",
+    sendMagicLink: async (destination, uri) => {
+        await sendEmail({
+            subject: mailConfig.subject,
+            to: destination,
+            templateId: mailConfig.templateId,
+            params: { cb_uri: uri },
+        }).then((data) => {
+            return data
+        })
+    },
+    verify: (_payload, _callback) => {
+        // user model upsert user
     },
 })
 
